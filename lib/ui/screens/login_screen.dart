@@ -1,42 +1,110 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:what_what_app/models/user_model.dart';
 import 'package:what_what_app/networking/networking_client.dart';
 import 'package:what_what_app/ui/components/buttons/primary_button.dart';
+import 'package:what_what_app/ui/components/helpers/spacers.dart';
+import 'package:what_what_app/ui/components/text_field.dart';
 import 'package:what_what_app/ui/routes.dart';
+import 'package:what_what_app/ui/styles/colors.dart';
+import 'package:what_what_app/ui/styles/fonts.dart';
 
-class WWLoginScreen extends StatelessWidget {
+class WWLoginScreen extends StatefulWidget {
   static const String pageRoute = "/login_screen_route";
 
   @override
+  _WWLoginScreenState createState() => _WWLoginScreenState();
+}
+
+class _WWLoginScreenState extends State<WWLoginScreen> {
+  final emailController = TextEditingController(text: "serenalambert1731@gmail.com");
+  final passwordController = TextEditingController(text: "pass1234");
+  WWPrimaryButtonState loginButtonState = WWPrimaryButtonState.active;
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      child: WWPrimaryButton(
-        text: "Log In",
-        onPressed: () async {
-          NetworkingClient client = Provider.of<NetworkingClient>(context, listen: false);
-          print('About to try and login');
-          User? user = await client.logIn("serenalambert1731@gmail.com", "pass1234");
-          if (user == null) {
-            print("FAILED");
-            return;
-          }
-          switch (user.role) {
-            case "admin":
-              Navigator.pushReplacementNamed(context, Routes.questionTogglerScreenRoute);
-              return;
-            case "leader":
-              Navigator.pushReplacementNamed(context, Routes.questionTogglerScreenRoute);
-              return;
-            case "student":
-              Navigator.pushReplacementNamed(context, Routes.askQuestionScreenRoute);
-              return;
-            default:
-              break;
-          }
-        },
+    return Scaffold(
+      body: Container(
+        padding: EdgeInsets.symmetric(horizontal: 24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Spacer(),
+            Text("WHAT WHAT", style: WWFonts.fromOptions(context, color: WWColor.accentColor, size: 52, weight: WWFontWeight.light)),
+            // WWVerticalSpacer(40),
+            Spacer(),
+            WWTextField(placeholder: "Email", controller: emailController, style: WWTextFieldStyle.singleLine),
+            WWVerticalSpacer(16),
+            WWTextField(placeholder: "Password", controller: passwordController, style: WWTextFieldStyle.singleLine),
+            // WWVerticalSpacer(40),
+            Spacer(),
+            WWPrimaryButton(
+              text: "Log In",
+              onPressed: () => attemptLogin(context),
+              state: loginButtonState,
+            ),
+            Spacer()
+          ],
+        ),
       ),
+    );
+  }
+
+  void attemptLogin(BuildContext context) async {
+    setLoginLoading();
+    NetworkingClient client = Provider.of<NetworkingClient>(context, listen: false);
+    String email = emailController.text;
+    String password = passwordController.text;
+    print('About to try and login: $email, $password');
+    User? user = await client.logIn(email, password);
+    if (user == null) {
+      print("FAILED");
+      await showLoginError(context);
+      setLoginActive();
+      return;
+    }
+    switch (user.role) {
+      case "admin":
+        Navigator.pushReplacementNamed(context, Routes.questionTogglerScreenRoute);
+        break;
+      case "leader":
+        Navigator.pushReplacementNamed(context, Routes.questionTogglerScreenRoute);
+        break;
+      case "student":
+        Navigator.pushReplacementNamed(context, Routes.askQuestionScreenRoute);
+        break;
+      default:
+        break;
+    }
+    // Future.delayed(Duration(seconds: 1), () {
+    //   setLoginActive();
+    // });
+  }
+
+  void setLoginActive() {
+    setState(() => loginButtonState = WWPrimaryButtonState.active);
+  }
+
+  void setLoginLoading() {
+    setState(() => loginButtonState = WWPrimaryButtonState.loading);
+  }
+
+  Future<void> showLoginError(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Error"),
+          titleTextStyle: WWFonts.fromOptions(context, color: WWColor.primaryText(context), size: 24, weight: WWFontWeight.semibold),
+          content: Text(
+            "Email address or password are incorrect.",
+            style: WWFonts.fromOptions(context, color: WWColor.primaryText(context), size: 20),
+          ),
+        );
+      },
     );
   }
 }

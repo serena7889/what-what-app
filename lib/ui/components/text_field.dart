@@ -3,16 +3,20 @@ import 'package:what_what_app/ui/styles/fonts.dart';
 import 'package:what_what_app/ui/styles/shadows.dart';
 import 'package:flutter/material.dart';
 
+enum WWTextFieldStyle { singleLine, multiline }
+
 class WWTextField extends StatelessWidget {
   final String placeholder;
   final TextEditingController controller;
+  final WWTextFieldStyle style;
 
-  const WWTextField({required this.placeholder, required this.controller});
+  const WWTextField({required this.placeholder, required this.controller, this.style = WWTextFieldStyle.multiline});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+      height: style == WWTextFieldStyle.singleLine ? 40 : null,
+      padding: EdgeInsets.symmetric(vertical: style == WWTextFieldStyle.multiline ? 20 : 0, horizontal: 16),
       decoration: BoxDecoration(
         color: WWColor.secondaryBackground(context),
         borderRadius: BorderRadius.circular(20),
@@ -22,17 +26,17 @@ class WWTextField extends StatelessWidget {
       ),
       child: TextField(
         controller: controller,
-        maxLines: null,
-        minLines: 6,
+        maxLines: style == WWTextFieldStyle.singleLine ? 1 : null,
+        minLines: style == WWTextFieldStyle.multiline ? 6 : null,
         autofocus: true,
         textCapitalization: TextCapitalization.sentences,
         enableSuggestions: false,
         decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: placeholder,
-          labelStyle: WWFonts.fromOptions(context, color: WWColor.primaryText(context), size: 16, weight: WWFontWeight.regular),
-          hintStyle: WWFonts.fromOptions(context, color: WWColor.secondaryText(context), size: 16, weight: WWFontWeight.semibold),
-        ),
+            border: InputBorder.none,
+            hintText: placeholder,
+            labelStyle: WWFonts.fromOptions(context, color: WWColor.primaryText(context), size: 16, weight: WWFontWeight.regular),
+            hintStyle: WWFonts.fromOptions(context, color: WWColor.secondaryText(context), size: 16, weight: WWFontWeight.semibold),
+            counterStyle: WWFonts.fromOptions(context, color: WWColor.accentColor, size: 16, weight: WWFontWeight.regular)),
       ),
     );
   }

@@ -1,6 +1,3 @@
-import 'package:flutter/material.dart';
-import 'dart:convert';
-
 enum ChildQuestionStatus { unapproved, rejected, approved }
 
 class ChildQuestion {
@@ -10,13 +7,6 @@ class ChildQuestion {
   String status;
 
   ChildQuestion({required this.id, required this.question, required this.dateAsked, required this.status});
-
-  // ChildQuestion.fromJson(Map<String, dynamic> json) {
-  //   id = json['_id'];
-  //   question = json['question'];
-  //   dateAsked = json['dateAsked'];
-  //   status = json['status'];
-  // }
 
   ChildQuestion.fromJson(Map<String, dynamic> json)
       : id = json['id'] ?? "",

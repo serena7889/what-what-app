@@ -1,4 +1,4 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:what_what_app/networking/app_state.dart';
 import 'package:what_what_app/networking/networking_client.dart';
 import 'package:what_what_app/ui/routes.dart';
 import 'package:what_what_app/ui/styles/colors.dart';
@@ -11,40 +11,45 @@ class AdminNavigationDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<WWTheme>(
-      builder: (context, theme, widget) => Drawer(
-        child: Container(
-          padding: EdgeInsets.fromLTRB(32, 64, 8, 8),
-          color: WWColor.primaryBackground(context),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              WWDrawerButton(
-                label: "Questions",
-                onTap: () => Navigator.pushReplacementNamed(context, Routes.questionTogglerScreenRoute),
-              ),
-              WWDrawerButton(
-                label: "Ask Question",
-                onTap: () => Navigator.pushReplacementNamed(context, Routes.askQuestionScreenRoute),
-              ),
-              Expanded(
-                child: Container(),
-              ),
-              WWDrawerButton(
-                label: theme.lightMode ? "Dark Mode" : "Light Mode",
-                onTap: () => theme.toggleMode(),
-              ),
-              WWDrawerButton(
-                label: "Log Out",
-                onTap: () async {
-                  NetworkingClient client = Provider.of<NetworkingClient>(context, listen: false);
-                  client.logOut();
-                  Navigator.pushReplacementNamed(context, Routes.loginScreenRoute);
-                },
-              ),
-            ],
-          ),
+    final theme = Provider.of<WWTheme>(context);
+    final appState = Provider.of<AppState>(context);
+    final currentUserName = appState.currentUser?.name ?? "Not found";
+    return Drawer(
+      child: Container(
+        padding: EdgeInsets.fromLTRB(32, 64, 8, 8),
+        color: WWColor.primaryBackground(context),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            WWDrawerButton(
+              label: currentUserName,
+              onTap: () => Navigator.pushReplacementNamed(context, Routes.questionTogglerScreenRoute),
+            ),
+            WWDrawerButton(
+              label: "Questions",
+              onTap: () => Navigator.pushReplacementNamed(context, Routes.questionTogglerScreenRoute),
+            ),
+            WWDrawerButton(
+              label: "Ask Question",
+              onTap: () => Navigator.pushReplacementNamed(context, Routes.askQuestionScreenRoute),
+            ),
+            Expanded(
+              child: Container(),
+            ),
+            WWDrawerButton(
+              label: theme.lightMode ? "Dark Mode" : "Light Mode",
+              onTap: () => theme.toggleMode(),
+            ),
+            WWDrawerButton(
+              label: "Log Out",
+              onTap: () async {
+                NetworkingClient client = Provider.of<NetworkingClient>(context, listen: false);
+                client.logOut();
+                Navigator.pushReplacementNamed(context, Routes.loginScreenRoute);
+              },
+            ),
+          ],
         ),
       ),
     );

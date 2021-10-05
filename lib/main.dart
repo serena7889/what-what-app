@@ -1,3 +1,4 @@
+import 'package:what_what_app/networking/app_state.dart';
 import 'package:what_what_app/networking/networking_client.dart';
 import 'package:what_what_app/ui/routes.dart';
 import 'package:what_what_app/ui/screens/ask_question_screen.dart';
@@ -25,28 +26,41 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<WWTheme>(
-      create: (_) => WWTheme(),
-      child: ChangeNotifierProvider<NetworkingClient>(
-        create: (_) => NetworkingClient(),
-        child: Consumer<WWTheme>(
-          builder: (context, theme, _) => MaterialApp(
-            theme: ThemeData(
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              primaryColor: WWColor.accentColor,
-            ),
-            themeMode: theme.lightMode ? ThemeMode.light : ThemeMode.dark,
-            initialRoute: Routes.splashScreenRoute,
-            routes: {
-              Routes.splashScreenRoute: (context) => WWLoginScreen(),
-              Routes.loginScreenRoute: (context) => WWLoginScreen(),
-              Routes.questionTogglerScreenRoute: (context) => WWQuestionsListsTogglerScreen(),
-              Routes.askQuestionScreenRoute: (context) => WWAskQuestionScreen(),
-            },
-          ),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: WWTheme()),
+        ChangeNotifierProvider.value(value: AppState()),
+        ChangeNotifierProxyProvider<AppState, NetworkingClient>(
+          create: (context) => NetworkingClient(appState: AppState()),
+          update: (context, appState, previousClient) => NetworkingClient(appState: appState),
         ),
-      ),
+      ],
+      child: Consumer<WWTheme>(builder: (context, theme, widget) {
+        return MaterialApp(
+          theme: ThemeData(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            primaryColor: WWColor.accentColor,
+            textSelectionTheme: TextSelectionThemeData(
+              cursorColor: WWColor.accentColor,
+              selectionColor: WWColor.accentColor.withOpacity(0.2),
+              selectionHandleColor: WWColor.accentColor,
+            ),
+          ),
+          themeMode: theme.lightMode ? ThemeMode.light : ThemeMode.dark,
+          initialRoute: Routes.splashScreenRoute,
+          routes: getRoutes(context),
+        );
+      }),
     );
+  }
+
+  Map<String, Widget Function(BuildContext)> getRoutes(BuildContext context) {
+    return {
+      Routes.splashScreenRoute: (context) => WWLoginScreen(),
+      Routes.loginScreenRoute: (context) => WWLoginScreen(),
+      Routes.questionTogglerScreenRoute: (context) => WWQuestionsListsTogglerScreen(),
+      Routes.askQuestionScreenRoute: (context) => WWAskQuestionScreen(),
+    };
   }
 }
