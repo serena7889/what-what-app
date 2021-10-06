@@ -9,7 +9,7 @@ class AvailableQuestionsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GenericQuestionList<ParentQuestion>(
-      cardFromQuestion: (question) {
+      cardFromQuestion: (question, triggerRefresh) {
         return WWBasicQuestionCard(question: question.text, onPressed: () => {});
       },
       getQuestions: () {

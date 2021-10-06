@@ -14,12 +14,18 @@ class UnapprovedQuestionsList extends StatelessWidget {
       getQuestions: () {
         return client.getUnapprovedQuestions();
       },
-      cardFromQuestion: (question) {
+      cardFromQuestion: (question, triggerRefresh) {
         print(question);
         return WWAcceptRejectQuestionCard(
           questionText: question.question,
-          onAcceptPressed: () => client.createNewParentQuestion(question.question, [question.id]),
-          onRejectPressed: () => client.rejectQuestion(question.id),
+          onAcceptPressed: () async {
+            await client.createNewParentQuestion(question.question, [question.id]);
+            triggerRefresh();
+          },
+          onRejectPressed: () async {
+            await client.rejectQuestion(question.id);
+            triggerRefresh();
+          },
         );
       },
     );
@@ -34,7 +40,7 @@ class RejectedQuestionList extends StatelessWidget {
         NetworkingClient client = Provider.of<NetworkingClient>(context);
         return client.getRejectedQuestions();
       },
-      cardFromQuestion: (question) {
+      cardFromQuestion: (question, triggerRefresh) {
         return WWBasicQuestionCard(question: question.question, onPressed: null);
       },
     );

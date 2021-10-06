@@ -9,7 +9,7 @@ class AnsweredQuestionsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GenericQuestionList<Slot>(
-      cardFromQuestion: (slot) {
+      cardFromQuestion: (slot, triggerRefresh) {
         return WWScheduledQuestionCard(
           question: slot.question?.text ?? "",
           date: slot.date.toString(),

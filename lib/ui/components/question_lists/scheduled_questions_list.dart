@@ -14,7 +14,7 @@ class ScheduledQuestionsList extends StatelessWidget {
         NetworkingClient client = Provider.of<NetworkingClient>(context, listen: false);
         return client.getScheduledQuestionsList();
       },
-      cardFromQuestion: (slot) {
+      cardFromQuestion: (slot, triggerRefresh) {
         if (slot.question != null && slot.leader != null) {
           return WWScheduledQuestionCard(
             question: slot.question!.text,

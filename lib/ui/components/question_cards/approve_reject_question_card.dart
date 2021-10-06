@@ -33,7 +33,9 @@ class WWAcceptRejectQuestionCard extends StatelessWidget {
               Expanded(
                 child: WWSecondaryButton(
                   text: "Reject",
-                  onPressed: onRejectPressed,
+                  onPressed: () {
+                    onRejectPressed();
+                  },
                   backgroundColor: WWColor.secondaryBackground(context),
                 ),
               ),
@@ -41,7 +43,9 @@ class WWAcceptRejectQuestionCard extends StatelessWidget {
               Expanded(
                 child: WWPrimaryButton(
                   text: "Accept",
-                  onPressed: onAcceptPressed,
+                  onPressed: () {
+                    onAcceptPressed();
+                  },
                 ),
               ),
             ],
