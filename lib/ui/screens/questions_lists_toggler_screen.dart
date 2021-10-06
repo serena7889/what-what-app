@@ -1,7 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:what_what_app/models/user_model.dart';
 import 'package:what_what_app/networking/app_state.dart';
-import 'package:what_what_app/ui/components/navigation_drawers.dart/admin_navigation_drawer.dart';
+import 'package:what_what_app/ui/components/admin_navigation_drawer.dart';
 import 'package:what_what_app/ui/components/question_lists/answered_questions_list.dart';
 import 'package:what_what_app/ui/components/question_lists/available_questions_list.dart';
 import 'package:what_what_app/ui/components/question_lists/scheduled_questions_list.dart';

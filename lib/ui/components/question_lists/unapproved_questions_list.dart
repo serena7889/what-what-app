@@ -9,13 +9,18 @@ import 'package:provider/provider.dart';
 class UnapprovedQuestionsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    NetworkingClient client = Provider.of<NetworkingClient>(context);
     return GenericQuestionList<ChildQuestion>(
       getQuestions: () {
-        NetworkingClient client = Provider.of<NetworkingClient>(context);
         return client.getUnapprovedQuestions();
       },
       cardFromQuestion: (question) {
-        return WWAcceptRejectQuestionCard(questionText: question.question, onAcceptPressed: () => {}, onRejectPressed: () => {});
+        print(question);
+        return WWAcceptRejectQuestionCard(
+          questionText: question.question,
+          onAcceptPressed: () => client.createNewParentQuestion(question.question, [question.id]),
+          onRejectPressed: () => client.rejectQuestion(question.id),
+        );
       },
     );
   }

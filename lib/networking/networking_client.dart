@@ -28,12 +28,40 @@ class NetworkingClient extends ChangeNotifier {
     return headers;
   }
 
-  // Add students question and return success flag
+  // Adds child question and return success flag
   Future<bool> addQuestion(String question) async {
     var url = Uri.parse('$baseUrl/questions/unapproved');
     var body = json.encode({'question': question});
     var response = await http.post(url, body: body, headers: defaultHeaders);
     return response.statusCode == 200;
+  }
+
+  Future<bool> rejectQuestion(String id) async {
+    print("About to reject question: *$id*");
+    var url = Uri.parse('$baseUrl/questions/rejected/$id');
+    var response = await http.put(url, headers: defaultHeaders);
+    return response.statusCode == 200;
+  }
+
+  Future<ParentQuestion?> createNewParentQuestion(String question, List<String> ids) async {
+    print("About to create new question");
+    var url = Uri.parse('$baseUrl/questions');
+    var body = json.encode({'question': question, 'children': ids});
+    var response = await http.post(url, body: body, headers: defaultHeaders);
+    if (!checkStatusCodeValid(response)) return null;
+    dynamic data = json.decode(response.body)['data'];
+    ParentQuestion newQuestion = ParentQuestion.fromJson(data);
+    return newQuestion;
+  }
+
+  Future<ParentQuestion?> addChildToParentQuestion(String childId, String parentId) async {
+    print("About to add child question");
+    var url = Uri.parse('$baseUrl/questions/parent/$parentId/child/$childId');
+    var response = await http.put(url, headers: defaultHeaders);
+    if (!checkStatusCodeValid(response)) return null;
+    dynamic data = json.decode(response.body)['data'];
+    ParentQuestion updatedQuestion = ParentQuestion.fromJson(data);
+    return updatedQuestion;
   }
 
   // Get all available questions (not yet scheduled)
@@ -68,7 +96,9 @@ class NetworkingClient extends ChangeNotifier {
     http.Response response = await http.get(Uri.parse('$baseUrl/questions/unapproved'), headers: defaultHeaders);
     if (!checkStatusCodeValid(response)) return [];
     Iterable data = json.decode(response.body)['data'];
+    print(data);
     List<ChildQuestion> questions = data.map((model) => ChildQuestion.fromJson(model)).toList();
+
     return questions;
   }
 

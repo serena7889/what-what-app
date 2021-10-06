@@ -1,12 +1,19 @@
 import 'package:what_what_app/ui/components/loading_spinner.dart';
 import 'package:flutter/material.dart';
 
-class GenericQuestionList<QuestionType> extends StatelessWidget {
+class GenericQuestionList<QuestionType> extends StatefulWidget {
   final Widget Function(QuestionType) cardFromQuestion;
   final Future<List<QuestionType>> Function() getQuestions;
   final bool showLoadingSpinner;
 
   GenericQuestionList({required this.cardFromQuestion, required this.getQuestions, this.showLoadingSpinner = false});
+
+  @override
+  _GenericQuestionListState<QuestionType> createState() => _GenericQuestionListState<QuestionType>();
+}
+
+class _GenericQuestionListState<QuestionType> extends State<GenericQuestionList<QuestionType>> {
+  bool triggerRefresh = false;
 
   Widget questionsList(AsyncSnapshot<List<QuestionType>> snapshot) {
     return Container(
@@ -15,7 +22,7 @@ class GenericQuestionList<QuestionType> extends StatelessWidget {
         children: snapshot.data!.map((question) {
           return Padding(
             padding: EdgeInsets.only(bottom: 20),
-            child: cardFromQuestion(question),
+            child: widget.cardFromQuestion(question),
           );
         }).toList(),
       ),
@@ -25,10 +32,10 @@ class GenericQuestionList<QuestionType> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<QuestionType>>(
-      future: getQuestions(),
+      future: widget.getQuestions(),
       initialData: [],
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting && showLoadingSpinner) return WWLoadingSpinner();
+        if (snapshot.connectionState == ConnectionState.waiting && widget.showLoadingSpinner) return WWLoadingSpinner();
         if (snapshot.hasData) return questionsList(snapshot);
         if (snapshot.hasData) return Center(child: Text(snapshot.error.toString()));
         return Container();

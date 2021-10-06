@@ -1,7 +1,7 @@
 import 'package:what_what_app/networking/networking_client.dart';
 import 'package:what_what_app/ui/components/buttons/primary_button.dart';
 import 'package:what_what_app/ui/components/helpers/spacers.dart';
-import 'package:what_what_app/ui/components/navigation_drawers.dart/admin_navigation_drawer.dart';
+import 'package:what_what_app/ui/components/admin_navigation_drawer.dart';
 import 'package:what_what_app/ui/components/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

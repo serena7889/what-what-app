@@ -9,7 +9,7 @@ class ChildQuestion {
   ChildQuestion({required this.id, required this.question, required this.dateAsked, required this.status});
 
   ChildQuestion.fromJson(Map<String, dynamic> json)
-      : id = json['id'] ?? "",
+      : id = json['_id'] ?? "",
         question = json['question'] ?? "",
         dateAsked = DateTime.parse(json['dateAsked']),
         status = json['status'];
