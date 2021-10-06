@@ -1,3 +1,6 @@
+import 'package:provider/provider.dart';
+import 'package:what_what_app/models/user_model.dart';
+import 'package:what_what_app/networking/app_state.dart';
 import 'package:what_what_app/ui/components/navigation_drawers.dart/admin_navigation_drawer.dart';
 import 'package:what_what_app/ui/components/question_lists/answered_questions_list.dart';
 import 'package:what_what_app/ui/components/question_lists/available_questions_list.dart';
@@ -10,24 +13,45 @@ import 'package:flutter/material.dart';
 class WWQuestionsListsTogglerScreen extends StatefulWidget {
   static const String pageRoute = "/questions_lists_toggler_screen";
 
-  final List<WWTabPage> pages = [
-    WWTabPage(
-      tabText: "Available",
-      page: AvailableQuestionsList(),
-    ),
-    WWTabPage(
-      tabText: "Answered",
-      page: AnsweredQuestionsList(),
-    ),
-    WWTabPage(
-      tabText: "Scheduled",
-      page: ScheduledQuestionsList(),
-    ),
-    WWTabPage(
-      tabText: "Pending",
-      page: UnapprovedQuestionsList(),
-    ),
-  ];
+  final availablePage = WWTabPage(
+    tabText: "Available",
+    page: AvailableQuestionsList(),
+  );
+
+  final answeredPage = WWTabPage(
+    tabText: "Answered",
+    page: AnsweredQuestionsList(),
+  );
+
+  final scheduledPage = WWTabPage(
+    tabText: "Scheduled",
+    page: ScheduledQuestionsList(),
+  );
+
+  final pendingPage = WWTabPage(
+    tabText: "Pending",
+    page: UnapprovedQuestionsList(),
+  );
+
+  final rejectedPage = WWTabPage(
+    tabText: "Rejected",
+    page: RejectedQuestionList(),
+  );
+
+  List<WWTabPage> getPages(BuildContext context) {
+    final appState = Provider.of<AppState>(context);
+    final role = appState.userRole;
+    switch (role) {
+      case UserRole.admin:
+        return [availablePage, answeredPage, scheduledPage, pendingPage, rejectedPage];
+      case UserRole.leader:
+        return [availablePage, answeredPage, scheduledPage];
+      case UserRole.student:
+        return [scheduledPage, answeredPage];
+      default:
+        return [];
+    }
+  }
 
   @override
   _WWQuestionsListsTogglerScreenState createState() => _WWQuestionsListsTogglerScreenState();
@@ -35,21 +59,21 @@ class WWQuestionsListsTogglerScreen extends StatefulWidget {
 
 class _WWQuestionsListsTogglerScreenState extends State<WWQuestionsListsTogglerScreen> with TickerProviderStateMixin {
   late TabController tabController = TabController(
-    length: widget.pages.length,
+    length: widget.getPages(context).length,
     vsync: this,
   );
 
   Widget get tabView {
     return TabBarView(
       controller: tabController,
-      children: widget.pages.map((tab) => tab.page).toList(),
+      children: widget.getPages(context).map((tab) => tab.page).toList(),
     );
   }
 
   Widget get tabBar {
     return WWTextTabBar(
       controller: tabController,
-      pages: widget.pages,
+      pages: widget.getPages(context),
     );
   }
 

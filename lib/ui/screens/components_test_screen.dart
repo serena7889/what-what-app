@@ -36,8 +36,8 @@ class ComponentsTestScreen extends StatelessWidget {
                   backgroundColor: WWColor.primaryBackground(context),
                 ),
                 WWVerticalSpacer(8),
-                WWParentQuestionCard(
-                  question: question,
+                WWBasicQuestionCard(
+                  question: question.text,
                   onPressed: () => {},
                 ),
                 WWVerticalSpacer(8),

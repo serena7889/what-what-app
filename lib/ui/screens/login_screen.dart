@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:what_what_app/models/user_model.dart';
+import 'package:what_what_app/networking/app_state.dart';
 import 'package:what_what_app/networking/networking_client.dart';
 import 'package:what_what_app/ui/components/buttons/primary_button.dart';
 import 'package:what_what_app/ui/components/helpers/spacers.dart';
@@ -36,9 +37,19 @@ class _WWLoginScreenState extends State<WWLoginScreen> {
             Text("WHAT WHAT", style: WWFonts.fromOptions(context, color: WWColor.accentColor, size: 52, weight: WWFontWeight.light)),
             // WWVerticalSpacer(40),
             Spacer(),
-            WWTextField(placeholder: "Email", controller: emailController, style: WWTextFieldStyle.singleLine),
+            WWTextField(
+              placeholder: "Email",
+              controller: emailController,
+              style: WWTextFieldStyle.singleLine,
+              capitalization: TextCapitalization.none,
+            ),
             WWVerticalSpacer(16),
-            WWTextField(placeholder: "Password", controller: passwordController, style: WWTextFieldStyle.singleLine),
+            WWTextField(
+              placeholder: "Password",
+              controller: passwordController,
+              style: WWTextFieldStyle.singleLine,
+              obscure: true,
+            ),
             // WWVerticalSpacer(40),
             Spacer(),
             WWPrimaryButton(
@@ -56,6 +67,7 @@ class _WWLoginScreenState extends State<WWLoginScreen> {
   void attemptLogin(BuildContext context) async {
     setLoginLoading();
     NetworkingClient client = Provider.of<NetworkingClient>(context, listen: false);
+    AppState appState = Provider.of<AppState>(context, listen: false);
     String email = emailController.text;
     String password = passwordController.text;
     print('About to try and login: $email, $password');
@@ -66,14 +78,15 @@ class _WWLoginScreenState extends State<WWLoginScreen> {
       setLoginActive();
       return;
     }
-    switch (user.role) {
-      case "admin":
+
+    switch (appState.userRole) {
+      case UserRole.admin:
         Navigator.pushReplacementNamed(context, Routes.questionTogglerScreenRoute);
         break;
-      case "leader":
+      case UserRole.leader:
         Navigator.pushReplacementNamed(context, Routes.questionTogglerScreenRoute);
         break;
-      case "student":
+      case UserRole.student:
         Navigator.pushReplacementNamed(context, Routes.askQuestionScreenRoute);
         break;
       default:

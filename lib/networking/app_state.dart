@@ -36,6 +36,17 @@ class AppState extends ChangeNotifier {
     return this._token;
   }
 
+  UserRole? get userRole {
+    switch (currentUser?.role) {
+      case 'admin':
+        return UserRole.admin;
+      case 'leader':
+        return UserRole.leader;
+      case 'student':
+        return UserRole.student;
+    }
+  }
+
   Future<String?> getToken() async {
     if (_token != null) return _token;
     SharedPreferences prefs = await SharedPreferences.getInstance();

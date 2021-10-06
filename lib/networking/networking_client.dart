@@ -44,7 +44,6 @@ class NetworkingClient extends ChangeNotifier {
     Iterable data = json.decode(response.body)['data'];
     List<ParentQuestion> questions = data.map((model) => ParentQuestion.fromJson(model)).toList();
     return questions;
-    // return getList<ParentQuestion>("/questions/available");
   }
 
   // Get all answered questions
@@ -54,7 +53,6 @@ class NetworkingClient extends ChangeNotifier {
     Iterable data = json.decode(response.body)['data'];
     List<Slot> questions = data.map((model) => Slot.fromJson(model)).toList();
     return questions;
-    // return getList<Slot>("/questions/answered");
   }
 
   // Get all scheduled questions
@@ -64,7 +62,6 @@ class NetworkingClient extends ChangeNotifier {
     Iterable data = json.decode(response.body)['data'];
     List<Slot> questions = data.map((model) => Slot.fromJson(model)).toList();
     return questions;
-    // getList<Slot>("/questions/scheduled");
   }
 
   Future<List<ChildQuestion>> getUnapprovedQuestions() async {
@@ -73,11 +70,17 @@ class NetworkingClient extends ChangeNotifier {
     Iterable data = json.decode(response.body)['data'];
     List<ChildQuestion> questions = data.map((model) => ChildQuestion.fromJson(model)).toList();
     return questions;
-    // getList<ChildQuestion>('/questions/unapproved');
+  }
+
+  Future<List<ChildQuestion>> getRejectedQuestions() async {
+    http.Response response = await http.get(Uri.parse('$baseUrl/questions/rejected'), headers: defaultHeaders);
+    if (!checkStatusCodeValid(response)) return [];
+    Iterable data = json.decode(response.body)['data'];
+    List<ChildQuestion> questions = data.map((model) => ChildQuestion.fromJson(model)).toList();
+    return questions;
   }
 
   Future<User?> getUser(String id) async {
-    // String userId = "6133e05ea0d78d9196e227c1";
     http.Response response = await http.get(Uri.parse('$baseUrl/users/$id'), headers: defaultHeaders);
     if (!checkStatusCodeValid(response)) return null;
     dynamic data = json.decode(response.body)['data'];
@@ -129,11 +132,4 @@ class NetworkingClient extends ChangeNotifier {
     await prefs.clear();
     return;
   }
-
-  // Future<List<Type>>? getList<Type extends Mappable>(String endpoint, {Map<String, String>? headers}) async {
-  //   http.Response response = await http.get(Uri.parse('$baseUrl$endpoint'), headers: headers ?? defaultHeaders);
-  //   Iterable data = json.decode(response.body)['data'];
-  //   List<Type> questions = data.map((model) => Type.fromJson(model)).toList() as List<Type>;
-  //   return questions;
-  // }
 }

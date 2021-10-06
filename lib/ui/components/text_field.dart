@@ -9,8 +9,10 @@ class WWTextField extends StatelessWidget {
   final String placeholder;
   final TextEditingController controller;
   final WWTextFieldStyle style;
+  final TextCapitalization capitalization;
+  final bool obscure;
 
-  const WWTextField({required this.placeholder, required this.controller, this.style = WWTextFieldStyle.multiline});
+  const WWTextField({required this.placeholder, required this.controller, this.style = WWTextFieldStyle.multiline, this.capitalization = TextCapitalization.sentences, this.obscure = false});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,8 @@ class WWTextField extends StatelessWidget {
         maxLines: style == WWTextFieldStyle.singleLine ? 1 : null,
         minLines: style == WWTextFieldStyle.multiline ? 6 : null,
         autofocus: true,
-        textCapitalization: TextCapitalization.sentences,
+        textCapitalization: capitalization,
+        obscureText: obscure,
         enableSuggestions: false,
         decoration: InputDecoration(
             border: InputBorder.none,

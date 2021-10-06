@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 class WWCardWrapper extends StatelessWidget {
   final Widget child;
-  final Function() onPressed;
+  final Function()? onPressed;
 
   const WWCardWrapper({required this.onPressed, required this.child});
 
