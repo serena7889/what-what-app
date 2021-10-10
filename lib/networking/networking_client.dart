@@ -28,19 +28,23 @@ class NetworkingClient extends ChangeNotifier {
     return headers;
   }
 
+  //
+  // QUESTION MANAGEMENT
+  //
+
   // Adds child question and return success flag
   Future<bool> addQuestion(String question) async {
     var url = Uri.parse('$baseUrl/questions/unapproved');
     var body = json.encode({'question': question});
     var response = await http.post(url, body: body, headers: defaultHeaders);
-    return response.statusCode == 200;
+    return checkStatusCodeValid(response);
   }
 
   Future<bool> rejectQuestion(String id) async {
     print("About to reject question: *$id*");
     var url = Uri.parse('$baseUrl/questions/rejected/$id');
     var response = await http.put(url, headers: defaultHeaders);
-    return response.statusCode == 200;
+    return checkStatusCodeValid(response);
   }
 
   Future<ParentQuestion?> createNewParentQuestion(String question, List<String> ids) async {
@@ -63,6 +67,10 @@ class NetworkingClient extends ChangeNotifier {
     ParentQuestion updatedQuestion = ParentQuestion.fromJson(data);
     return updatedQuestion;
   }
+
+  //
+  // GET QUESTIONS LISTS
+  //
 
   // Get all available questions (not yet scheduled)
   Future<List<ParentQuestion>> getAvailableQuestions() async {
@@ -109,6 +117,54 @@ class NetworkingClient extends ChangeNotifier {
     List<ChildQuestion> questions = data.map((model) => ChildQuestion.fromJson(model)).toList();
     return questions;
   }
+
+  //
+  // SLOT MANAGEMENT
+  //
+
+  Future<Slot?> getSlot(String slotId) async {
+    http.Response response = await http.get(Uri.parse('$baseUrl/slots/$slotId'), headers: defaultHeaders);
+    if (!checkStatusCodeValid(response)) return null;
+    dynamic data = json.decode(response.body)['data'];
+    Slot? slot = Slot.fromJson(data);
+    return slot;
+  }
+
+  Future<List<Slot>> getSlots() async {
+    http.Response response = await http.get(Uri.parse('$baseUrl/slots'), headers: defaultHeaders);
+    if (!checkStatusCodeValid(response)) return [];
+    Iterable data = json.decode(response.body)['data'];
+    List<Slot> slots = data.map((model) => Slot.fromJson(model)).toList();
+    return slots;
+  }
+
+  Future<bool> addSlot(DateTime date) async {
+    var url = Uri.parse('$baseUrl/slots');
+    var body = json.encode({'date': date.toIso8601String()});
+    var response = await http.post(url, body: body, headers: defaultHeaders);
+    return checkStatusCodeValid(response);
+  }
+
+  Future<bool> assignQuestionAndLeaderToSlot(String slotId, String questionId, String leaderId) async {
+    var url = Uri.parse('$baseUrl/slots/$slotId/assigned');
+    var body = json.encode({'questionId': questionId, 'leaderId': leaderId});
+    var response = await http.post(url, body: body, headers: defaultHeaders);
+    return checkStatusCodeValid(response);
+  }
+
+  Future<bool> removeQuestionAndLeaderFromSlot(String slotId) async {
+    var url = Uri.parse('$baseUrl/slots/$slotId/assigned');
+    var response = await http.delete(url, headers: defaultHeaders);
+    return checkStatusCodeValid(response);
+  }
+
+  //
+  // TOPIC MANAGEMENT
+  //
+
+  //
+  // USERS & AUTH
+  //
 
   Future<User?> getUser(String id) async {
     http.Response response = await http.get(Uri.parse('$baseUrl/users/$id'), headers: defaultHeaders);

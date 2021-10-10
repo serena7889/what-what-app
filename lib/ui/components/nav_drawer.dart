@@ -7,8 +7,8 @@ import 'package:what_what_app/ui/styles/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class AdminNavigationDrawer extends StatelessWidget {
-  const AdminNavigationDrawer({Key? key}) : super(key: key);
+class WWNavDrawer extends StatelessWidget {
+  const WWNavDrawer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +27,10 @@ class AdminNavigationDrawer extends StatelessWidget {
     final askQuestionButton = WWDrawerButton(
       label: "Ask Question",
       onTap: () => Navigator.pushReplacementNamed(context, Routes.askQuestionScreenRoute),
+    );
+    final manageSlotsButton = WWDrawerButton(
+      label: "Manage Slots",
+      onTap: () => Navigator.pushReplacementNamed(context, Routes.manageSlotsScreenRoute),
     );
     final spacer = Expanded(
       child: Container(),
@@ -48,7 +52,7 @@ class AdminNavigationDrawer extends StatelessWidget {
 
     switch (appState.userRole) {
       case UserRole.admin:
-        items.addAll([questionsButton, askQuestionButton]);
+        items.addAll([questionsButton, askQuestionButton, manageSlotsButton]);
         break;
       case UserRole.leader:
         items.addAll([questionsButton, askQuestionButton]);

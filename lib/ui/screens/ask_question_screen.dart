@@ -1,7 +1,7 @@
 import 'package:what_what_app/networking/networking_client.dart';
 import 'package:what_what_app/ui/components/buttons/primary_button.dart';
 import 'package:what_what_app/ui/components/helpers/spacers.dart';
-import 'package:what_what_app/ui/components/admin_navigation_drawer.dart';
+import 'package:what_what_app/ui/components/nav_drawer.dart';
 import 'package:what_what_app/ui/components/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +15,7 @@ class WWAskQuestionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Ask Question")),
-      drawer: AdminNavigationDrawer(),
+      drawer: WWNavDrawer(),
       body: Container(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(vertical: 32, horizontal: 20),
