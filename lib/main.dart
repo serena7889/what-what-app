@@ -4,6 +4,7 @@ import 'package:what_what_app/ui/routes.dart';
 import 'package:what_what_app/ui/screens/ask_question_screen.dart';
 import 'package:what_what_app/ui/screens/login_screen.dart';
 import 'package:what_what_app/ui/screens/manage_slots_screen.dart';
+import 'package:what_what_app/ui/screens/manage_topics_screen.dart';
 import 'package:what_what_app/ui/screens/questions_lists_toggler_screen.dart';
 import 'package:what_what_app/ui/screens/splash_screen.dart';
 import 'package:what_what_app/ui/styles/colors.dart';
@@ -62,7 +63,8 @@ class _AppState extends State<App> {
       Routes.loginScreenRoute: (context) => WWLoginScreen(),
       Routes.questionTogglerScreenRoute: (context) => WWQuestionsListsTogglerScreen(),
       Routes.askQuestionScreenRoute: (context) => WWAskQuestionScreen(),
-      Routes.manageSlotsScreenRoute: (context) => WWManageSlotsScreen()
+      Routes.manageSlotsScreenRoute: (context) => WWManageSlotsScreen(),
+      Routes.manageTopicsScreenRoute: (context) => WWManageTopicsScreen(),
     };
   }
 }

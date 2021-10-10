@@ -32,6 +32,10 @@ class WWNavDrawer extends StatelessWidget {
       label: "Manage Slots",
       onTap: () => Navigator.pushReplacementNamed(context, Routes.manageSlotsScreenRoute),
     );
+    final manageTopicsButton = WWDrawerButton(
+      label: "Manage Topics",
+      onTap: () => Navigator.pushReplacementNamed(context, Routes.manageTopicsScreenRoute),
+    );
     final spacer = Expanded(
       child: Container(),
     );
@@ -52,7 +56,7 @@ class WWNavDrawer extends StatelessWidget {
 
     switch (appState.userRole) {
       case UserRole.admin:
-        items.addAll([questionsButton, askQuestionButton, manageSlotsButton]);
+        items.addAll([questionsButton, askQuestionButton, manageSlotsButton, manageTopicsButton]);
         break;
       case UserRole.leader:
         items.addAll([questionsButton, askQuestionButton]);

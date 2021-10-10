@@ -6,6 +6,7 @@ import 'package:what_what_app/models/parent_question_model.dart';
 import 'package:what_what_app/models/child_question_model.dart';
 import 'package:what_what_app/models/slot_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:what_what_app/models/topic_model.dart';
 import 'package:what_what_app/models/user_model.dart';
 import 'package:what_what_app/networking/app_state.dart';
 
@@ -167,6 +168,35 @@ class NetworkingClient extends ChangeNotifier {
   //
   // TOPIC MANAGEMENT
   //
+
+  // Future<Topic?> getTopic(String topicId) async {
+  //   http.Response response = await http.get(Uri.parse('$baseUrl/topics/$topicId'), headers: defaultHeaders);
+  //   if (!checkStatusCodeValid(response)) return null;
+  //   dynamic data = json.decode(response.body)['data'];
+  //   Topic? topic = Topic.fromJson(data);
+  //   return topic;
+  // }
+
+  Future<List<Topic>> getTopics() async {
+    http.Response response = await http.get(Uri.parse('$baseUrl/topics'), headers: defaultHeaders);
+    if (!checkStatusCodeValid(response)) return [];
+    Iterable data = json.decode(response.body)['data'];
+    List<Topic> topics = data.map((model) => Topic.fromJson(model)).toList();
+    return topics;
+  }
+
+  Future<bool> addTopic(String topicName) async {
+    var url = Uri.parse('$baseUrl/topics');
+    var body = json.encode({'name': topicName});
+    var response = await http.post(url, body: body, headers: defaultHeaders);
+    return checkStatusCodeValid(response);
+  }
+
+  // Future<bool> removeTopic(String topicId) async {
+  //   var url = Uri.parse('$baseUrl/topics/$topicId');
+  //   var response = await http.delete(url, headers: defaultHeaders);
+  //   return checkStatusCodeValid(response);
+  // }
 
   //
   // USERS & AUTH
