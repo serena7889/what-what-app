@@ -16,15 +16,18 @@ class GenericQuestionList<QuestionType> extends StatefulWidget {
 
 class _GenericQuestionListState<QuestionType> extends State<GenericQuestionList<QuestionType>> {
   Widget questionsList(AsyncSnapshot<List<QuestionType>> snapshot, VoidCallback triggerRefresh) {
+    List<QuestionType> list = snapshot.data!;
     return Container(
-      child: ListView(
-        padding: EdgeInsets.only(left: 24, right: 24, bottom: 24),
-        children: snapshot.data!.map((question) {
+      padding: EdgeInsets.only(left: 24, right: 24, bottom: 16),
+      child: ListView.builder(
+        clipBehavior: Clip.none,
+        itemCount: list.length,
+        itemBuilder: (context, i) {
           return Padding(
-            padding: EdgeInsets.only(bottom: 20),
-            child: widget.cardFromQuestion(question, triggerRefresh),
+            padding: EdgeInsets.only(bottom: 12),
+            child: widget.cardFromQuestion(list[i], triggerRefresh),
           );
-        }).toList(),
+        },
       ),
     );
   }
@@ -37,7 +40,7 @@ class _GenericQuestionListState<QuestionType> extends State<GenericQuestionList<
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting && widget.showLoadingSpinner) return WWLoadingSpinner();
         if (snapshot.hasData) return questionsList(snapshot, triggerRefresh);
-        if (snapshot.hasData) return Center(child: Text(snapshot.error.toString()));
+        if (snapshot.hasError) return Center(child: Text(snapshot.error.toString()));
         return Container();
       },
     );

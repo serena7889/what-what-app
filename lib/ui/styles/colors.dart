@@ -7,6 +7,19 @@ class WWTheme with ChangeNotifier {
     lightMode = !lightMode;
     notifyListeners();
   }
+
+  ThemeData get themeData {
+    return ThemeData(
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      primaryColor: WWColor.accentColor,
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: WWColor.accentColor,
+        selectionColor: WWColor.accentColor.withOpacity(0.2),
+        selectionHandleColor: WWColor.accentColor,
+      ),
+    );
+  }
 }
 
 class WWColor {

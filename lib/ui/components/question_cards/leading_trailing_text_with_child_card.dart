@@ -24,6 +24,7 @@ class WWLeadingTrailingTextWithChildCard extends StatelessWidget {
     return WWCardWrapper(
       onPressed: onCardPressed,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

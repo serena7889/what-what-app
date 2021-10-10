@@ -158,6 +158,12 @@ class NetworkingClient extends ChangeNotifier {
     return checkStatusCodeValid(response);
   }
 
+  Future<bool> removeSlot(String slotId) async {
+    var url = Uri.parse('$baseUrl/slots/$slotId');
+    var response = await http.delete(url, headers: defaultHeaders);
+    return checkStatusCodeValid(response);
+  }
+
   //
   // TOPIC MANAGEMENT
   //
