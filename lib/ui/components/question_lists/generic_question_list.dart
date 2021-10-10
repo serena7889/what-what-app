@@ -1,5 +1,7 @@
 import 'package:what_what_app/ui/components/loading_spinner.dart';
 import 'package:flutter/material.dart';
+import 'package:what_what_app/ui/styles/colors.dart';
+import 'package:what_what_app/ui/styles/fonts.dart';
 
 typedef void VoidCallback();
 
@@ -8,7 +10,7 @@ class GenericQuestionList<QuestionType> extends StatefulWidget {
   final Future<List<QuestionType>> Function() getQuestions;
   final bool showLoadingSpinner;
 
-  GenericQuestionList({required this.cardFromQuestion, required this.getQuestions, this.showLoadingSpinner = false});
+  GenericQuestionList({required this.cardFromQuestion, required this.getQuestions, this.showLoadingSpinner = true});
 
   @override
   _GenericQuestionListState<QuestionType> createState() => _GenericQuestionListState<QuestionType>();
@@ -17,6 +19,14 @@ class GenericQuestionList<QuestionType> extends StatefulWidget {
 class _GenericQuestionListState<QuestionType> extends State<GenericQuestionList<QuestionType>> {
   Widget questionsList(AsyncSnapshot<List<QuestionType>> snapshot, VoidCallback triggerRefresh) {
     List<QuestionType> list = snapshot.data!;
+    if (list.length == 0) {
+      return Center(
+        child: Text(
+          "No Questions",
+          style: WWFonts.fromOptions(context, size: 24, color: WWColor.primaryText(context)),
+        ),
+      );
+    }
     return Container(
       padding: EdgeInsets.only(left: 24, right: 24, bottom: 16),
       child: ListView.builder(
@@ -40,7 +50,10 @@ class _GenericQuestionListState<QuestionType> extends State<GenericQuestionList<
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting && widget.showLoadingSpinner) return WWLoadingSpinner();
         if (snapshot.hasData) return questionsList(snapshot, triggerRefresh);
-        if (snapshot.hasError) return Center(child: Text(snapshot.error.toString()));
+        if (snapshot.hasError)
+          return Center(
+            child: Text("Error", style: WWFonts.fromOptions(context, size: 24, color: WWColor.primaryText(context))),
+          );
         return Container();
       },
     );

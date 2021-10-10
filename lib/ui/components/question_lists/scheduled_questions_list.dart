@@ -1,5 +1,6 @@
 import 'package:what_what_app/models/slot_model.dart';
 import 'package:what_what_app/networking/networking_client.dart';
+import 'package:what_what_app/ui/helpers/datetime_extension.dart';
 import 'package:what_what_app/ui/components/question_cards/choose_question_card.dart';
 import 'package:what_what_app/ui/components/question_cards/scheduled_question_card.dart';
 import 'package:what_what_app/ui/components/question_lists/generic_question_list.dart';
@@ -18,13 +19,13 @@ class ScheduledQuestionsList extends StatelessWidget {
         if (slot.question != null && slot.leader != null) {
           return WWScheduledQuestionCard(
             question: slot.question!.text,
-            date: slot.date.toString(),
+            date: slot.date.toFormattedString(),
             answererName: slot.leader!.name,
             onButtonPressed: () => {},
           );
         } else {
           return WWChooseQuestionCard(
-            leadingText: slot.date.toString(),
+            leadingText: slot.date.toFormattedString(),
             onButtonPressed: () => {},
           );
         }

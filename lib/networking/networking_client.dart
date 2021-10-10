@@ -11,7 +11,9 @@ import 'package:what_what_app/models/user_model.dart';
 import 'package:what_what_app/networking/app_state.dart';
 
 class NetworkingClient extends ChangeNotifier {
-  final String baseUrl = 'http://192.168.1.143:8000/api/v1';
+  // local = 'http://192.168.1.143:8000';
+  // remote = 'https://what-what-api.herokuapp.com/';
+  final String baseUrl = 'https://what-what-api.herokuapp.com/api/v1';
 
   final AppState appState;
 
