@@ -52,7 +52,7 @@ class WWNavDrawer extends StatelessWidget {
       },
     );
 
-    List<Widget> items = [profileButton];
+    List<Widget> items = [spacer];
 
     switch (appState.userRole) {
       case UserRole.admin:
@@ -67,7 +67,7 @@ class WWNavDrawer extends StatelessWidget {
       default:
         break;
     }
-    items.addAll([spacer, styleButton, logOutButton]);
+    items.addAll([spacer, profileButton, logOutButton]);
 
     return Drawer(
       child: Container(

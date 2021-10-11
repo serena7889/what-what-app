@@ -42,7 +42,7 @@ class _WWManageSlotsScreenState extends State<WWManageSlotsScreen> {
           cardFromQuestion: (slot, triggerRefresh) {
             return WWScheduledQuestionCard(
               question: slot.question?.text ?? "No Question",
-              date: slot.date.toFormattedString(),
+              date: slot.date?.toFormattedString() ?? "No Date",
               answererName: slot.leader?.name ?? "No Leader",
               onButtonPressed: () => showDeleteSlotDialog(context, slot),
             );
@@ -72,9 +72,11 @@ class _WWManageSlotsScreenState extends State<WWManageSlotsScreen> {
   void triggerRefresh() => setState(() => {});
 
   void removeSlot(Slot slot) async {
-    final client = Provider.of<NetworkingClient>(context);
-    await client.removeSlot(slot.id);
-    triggerRefresh();
+    final client = Provider.of<NetworkingClient>(context, listen: false);
+    if (slot.id != null) {
+      await client.removeSlot(slot.id!);
+      triggerRefresh();
+    }
     Navigator.pop(context);
   }
 

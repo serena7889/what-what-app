@@ -11,9 +11,12 @@ import 'package:what_what_app/models/user_model.dart';
 import 'package:what_what_app/networking/app_state.dart';
 
 class NetworkingClient extends ChangeNotifier {
-  // local = 'http://192.168.1.143:8000';
-  // remote = 'https://what-what-api.herokuapp.com/';
-  final String baseUrl = 'https://what-what-api.herokuapp.com/api/v1';
+  final String local = 'http://192.168.1.143:8000';
+  final String remote = 'https://what-what-api.herokuapp.com';
+  final bool useRemote = false;
+  String get baseUrl {
+    return '${useRemote ? remote : local}/api/v1';
+  }
 
   final AppState appState;
 
@@ -141,6 +144,14 @@ class NetworkingClient extends ChangeNotifier {
     return slots;
   }
 
+  Future<List<Slot>> getAvailableSlots() async {
+    http.Response response = await http.get(Uri.parse('$baseUrl/slots/available'), headers: defaultHeaders);
+    if (!checkStatusCodeValid(response)) return [];
+    Iterable data = json.decode(response.body)['data'];
+    List<Slot> slots = data.map((model) => Slot.fromJson(model)).toList();
+    return slots;
+  }
+
   Future<bool> addSlot(DateTime date) async {
     var url = Uri.parse('$baseUrl/slots');
     var body = json.encode({'date': date.toIso8601String()});
@@ -203,6 +214,23 @@ class NetworkingClient extends ChangeNotifier {
   //
   // USERS & AUTH
   //
+
+  Future<List<User>> getUsers({List<UserRole>? roles}) async {
+    var initialUrl = '$baseUrl/users';
+    if (roles != null) {
+      final rolesParameters = roles.map((role) {
+        return 'role=${role.asString()}';
+      }).join("&");
+      initialUrl += '?$rolesParameters';
+    }
+
+    http.Response response = await http.get(Uri.parse(initialUrl), headers: defaultHeaders);
+    if (!checkStatusCodeValid(response)) return [];
+    print(response.body);
+    Iterable data = json.decode(response.body)['data'];
+    List<User> users = data.map((model) => User.fromJson(model)).toList();
+    return users;
+  }
 
   Future<User?> getUser(String id) async {
     http.Response response = await http.get(Uri.parse('$baseUrl/users/$id'), headers: defaultHeaders);

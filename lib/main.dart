@@ -59,7 +59,7 @@ class _AppState extends State<App> {
 
   Map<String, Widget Function(BuildContext)> getRoutes(BuildContext context) {
     return {
-      Routes.splashScreenRoute: (context) => WWLoginScreen(),
+      Routes.splashScreenRoute: (context) => WWSplashScreen(),
       Routes.loginScreenRoute: (context) => WWLoginScreen(),
       Routes.questionTogglerScreenRoute: (context) => WWQuestionsListsTogglerScreen(),
       Routes.askQuestionScreenRoute: (context) => WWAskQuestionScreen(),

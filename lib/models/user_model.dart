@@ -1,5 +1,18 @@
 enum UserRole { student, leader, admin }
 
+extension UserRoleExtension on UserRole {
+  String asString() {
+    switch (this) {
+      case UserRole.admin:
+        return 'admin';
+      case UserRole.leader:
+        return 'leader';
+      case UserRole.student:
+        return 'student';
+    }
+  }
+}
+
 class User {
   String id;
   String name;

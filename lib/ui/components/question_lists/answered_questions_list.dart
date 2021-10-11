@@ -13,7 +13,7 @@ class AnsweredQuestionsList extends StatelessWidget {
       cardFromQuestion: (slot, triggerRefresh) {
         return WWScheduledQuestionCard(
           question: slot.question?.text ?? "",
-          date: slot.date.toFormattedString(),
+          date: slot.date?.toFormattedString() ?? "",
           answererName: slot.leader?.name ?? "",
           onButtonPressed: () => {},
         );

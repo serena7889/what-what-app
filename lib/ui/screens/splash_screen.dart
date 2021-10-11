@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:what_what_app/networking/app_state.dart';
 import 'package:what_what_app/networking/networking_client.dart';
 import 'package:what_what_app/ui/components/loading_spinner.dart';
 import 'package:what_what_app/ui/routes.dart';
@@ -23,8 +22,11 @@ class _WWSplashScreenState extends State<WWSplashScreen> {
   void goToQuestionsTogglerScreen() => Navigator.pushReplacementNamed(context, Routes.questionTogglerScreenRoute);
 
   Future<void> checkIfLoggedIn() async {
-    AppState appState = Provider.of<AppState>(context, listen: false);
-    if (await appState.getToken() == null) goToLoginScreen();
+    final client = Provider.of<NetworkingClient>(context, listen: false);
+    final token = await client.appState.getToken();
+    if (token == null) goToLoginScreen();
+    print("TOKEN: after splash: ${client.appState.token}");
+    if (client.appState.currentUser == null) await client.getUserForToken();
     goToQuestionsTogglerScreen();
   }
 

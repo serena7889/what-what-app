@@ -2,12 +2,12 @@ import 'package:what_what_app/models/parent_question_model.dart';
 import 'package:what_what_app/models/user_model.dart';
 
 class Slot {
-  String id;
-  DateTime date;
+  String? id;
+  DateTime? date;
   User? leader;
   ParentQuestion? question;
 
-  Slot({required this.id, required this.date, required this.leader, required this.question});
+  Slot({this.id, this.date, this.leader, this.question});
 
   Slot.fromJson(Map<String, dynamic> json)
       : id = json['_id'],
