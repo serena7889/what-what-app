@@ -5,6 +5,7 @@ import 'package:what_what_app/networking/app_state.dart';
 import 'package:what_what_app/networking/networking_client.dart';
 import 'package:what_what_app/ui/components/buttons/primary_button.dart';
 import 'package:what_what_app/ui/components/helpers/spacers.dart';
+import 'package:what_what_app/ui/components/nav_drawer.dart';
 import 'package:what_what_app/ui/components/text_field.dart';
 import 'package:what_what_app/ui/routes.dart';
 import 'package:what_what_app/ui/styles/colors.dart';
@@ -25,6 +26,8 @@ class _WWLoginScreenState extends State<WWLoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: WWNavDrawer(),
+      appBar: AppBar(),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 24),
         child: Column(

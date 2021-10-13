@@ -48,26 +48,36 @@ class WWNavDrawer extends StatelessWidget {
       onTap: () async {
         NetworkingClient client = Provider.of<NetworkingClient>(context, listen: false);
         client.logOut();
+        Navigator.pushReplacementNamed(context, Routes.askQuestionScreenRoute);
+      },
+    );
+    final loginButton = WWDrawerButton(
+      label: "Log In",
+      onTap: () async {
         Navigator.pushReplacementNamed(context, Routes.loginScreenRoute);
       },
     );
 
     List<Widget> items = [spacer];
 
-    switch (appState.userRole) {
-      case UserRole.admin:
-        items.addAll([questionsButton, askQuestionButton, manageSlotsButton, manageTopicsButton]);
-        break;
-      case UserRole.leader:
-        items.addAll([questionsButton, askQuestionButton]);
-        break;
-      case UserRole.student:
-        items.addAll([questionsButton, askQuestionButton]);
-        break;
-      default:
-        break;
+    if (appState.token == null) {
+      items.addAll([askQuestionButton, spacer, loginButton]);
+    } else {
+      switch (appState.userRole) {
+        case UserRole.admin:
+          items.addAll([questionsButton, askQuestionButton, manageSlotsButton, manageTopicsButton]);
+          break;
+        case UserRole.leader:
+          items.addAll([questionsButton, askQuestionButton]);
+          break;
+        case UserRole.student:
+          items.addAll([questionsButton, askQuestionButton]);
+          break;
+        default:
+          break;
+      }
+      items.addAll([spacer, profileButton, logOutButton]);
     }
-    items.addAll([spacer, profileButton, logOutButton]);
 
     return Drawer(
       child: Container(

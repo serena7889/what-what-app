@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:what_what_app/models/parent_question_model.dart';
 import 'package:what_what_app/models/slot_model.dart';
 import 'package:what_what_app/networking/networking_client.dart';
+import 'package:what_what_app/ui/components/buttons/back_button.dart';
 import 'package:what_what_app/ui/components/question_cards/available_question_card.dart';
 import 'package:what_what_app/ui/components/question_lists/generic_question_list.dart';
 import 'package:what_what_app/ui/screens/confirm_slot_screen.dart';
@@ -26,10 +27,7 @@ class _SelectQuestionForSlotScreen extends State<SelectQuestionForSlotScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Choose Question"),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: WWBackButton(),
       ),
       body: Container(
         padding: EdgeInsets.only(top: 24),

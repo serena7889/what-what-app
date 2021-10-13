@@ -13,7 +13,7 @@ import 'package:what_what_app/networking/app_state.dart';
 class NetworkingClient extends ChangeNotifier {
   final String local = 'http://192.168.1.143:8000';
   final String remote = 'https://what-what-api.herokuapp.com';
-  final bool useRemote = false;
+  final bool useRemote = true;
   String get baseUrl {
     return '${useRemote ? remote : local}/api/v1';
   }
@@ -27,7 +27,14 @@ class NetworkingClient extends ChangeNotifier {
   }
 
   Map<String, String> get defaultHeaders {
-    Map<String, String> headers = {"Content-Type": "application/json", "Accept": "application/json"};
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Credentials": 'true',
+      "Access-Control-Allow-Headers": "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
+      "Access-Control-Allow-Methods": "GET, PUT, DELETE, POST, OPTIONS"
+    };
     if (appState.getPrefetchedToken() != null) {
       headers["Authorization"] = 'Bearer ${appState.token}';
     }
@@ -64,14 +71,31 @@ class NetworkingClient extends ChangeNotifier {
     return newQuestion;
   }
 
-  Future<ParentQuestion?> addChildToParentQuestion(String childId, String parentId) async {
+  Future<ParentQuestion?> addChildToParentQuestion({required String updatedQuestionText, required String childId, required String parentId}) async {
     print("About to add child question");
     var url = Uri.parse('$baseUrl/questions/parent/$parentId/child/$childId');
-    var response = await http.put(url, headers: defaultHeaders);
+    var body = json.encode({'updatedQuestion': updatedQuestionText});
+    var response = await http.put(url, body: body, headers: defaultHeaders);
     if (!checkStatusCodeValid(response)) return null;
     dynamic data = json.decode(response.body)['data'];
     ParentQuestion updatedQuestion = ParentQuestion.fromJson(data);
     return updatedQuestion;
+  }
+
+  Future<bool> checkAskQuestionPassphrase(String passphrase) async {
+    var url = Uri.parse('$baseUrl/settings/askQuestionPassphrase/$passphrase');
+    var response = await http.get(url, headers: defaultHeaders);
+    if (!checkStatusCodeValid(response)) return false;
+    print(response.body);
+    bool correct = json.decode(response.body)['data'];
+    return correct;
+  }
+
+  Future<bool> setAskQuestionPassphrase(String passphrase) async {
+    var url = Uri.parse('$baseUrl/settings/askQuestionPassphrase/$passphrase');
+    var response = await http.put(url, headers: defaultHeaders);
+    if (!checkStatusCodeValid(response)) return false;
+    return true;
   }
 
   //

@@ -9,8 +9,10 @@ class GenericQuestionList<QuestionType> extends StatefulWidget {
   final Widget Function(QuestionType, VoidCallback) cardFromQuestion;
   final Future<List<QuestionType>> Function() getQuestions;
   final bool showLoadingSpinner;
+  final double topPadding;
+  final double bottomPadding;
 
-  GenericQuestionList({required this.cardFromQuestion, required this.getQuestions, this.showLoadingSpinner = true});
+  GenericQuestionList({required this.cardFromQuestion, required this.getQuestions, this.showLoadingSpinner = true, this.topPadding = 0, this.bottomPadding = 16});
 
   @override
   _GenericQuestionListState<QuestionType> createState() => _GenericQuestionListState<QuestionType>();
@@ -28,7 +30,7 @@ class _GenericQuestionListState<QuestionType> extends State<GenericQuestionList<
       );
     }
     return Container(
-      padding: EdgeInsets.only(left: 24, right: 24, bottom: 16),
+      padding: EdgeInsets.only(left: 24, right: 24, top: widget.topPadding, bottom: widget.bottomPadding),
       child: ListView.builder(
         clipBehavior: Clip.none,
         itemCount: list.length,

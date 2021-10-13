@@ -5,6 +5,7 @@ import 'package:what_what_app/ui/components/question_cards/available_question_ca
 import 'package:what_what_app/ui/components/question_lists/generic_question_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:what_what_app/ui/screens/merge_child_with_parent_screen.dart';
 
 class UnapprovedQuestionsList extends StatelessWidget {
   @override
@@ -19,7 +20,13 @@ class UnapprovedQuestionsList extends StatelessWidget {
         return WWAcceptRejectQuestionCard(
           questionText: question.question,
           onAcceptPressed: () async {
-            await client.createNewParentQuestion(question.question, [question.id]);
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return MergeChildWithParentScreen(
+                pendingListRefreshTrigger: triggerRefresh,
+                child: question,
+              );
+            }));
+            // await client.createNewParentQuestion(question.question, [question.id]);
             triggerRefresh();
           },
           onRejectPressed: () async {
